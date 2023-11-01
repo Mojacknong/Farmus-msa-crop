@@ -3,12 +3,14 @@ package com.example.farmuscrop.domain.crop.service;
 import com.example.farmuscrop.domain.crop.document.Crop;
 import com.example.farmuscrop.domain.crop.dto.req.CreateCropRequestDto;
 import com.example.farmuscrop.domain.crop.dto.res.CreateCropResponseDto;
+import com.example.farmuscrop.domain.crop.dto.res.GetCropNameAndDifficultyDto;
 import com.example.farmuscrop.domain.crop.repository.CropRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,18 @@ public class CropService {
 //    public List<Crop.Step> findAllSteps() {
 //        return mongoTemplate.findAll(Crop.Step.class);
 //    }
+
+    public List<GetCropNameAndDifficultyDto> getCropNameAndDifficultyList() {
+        List<Crop> crops = findAllCrops();
+
+        return crops.stream()
+                .map(crop -> GetCropNameAndDifficultyDto.of(crop.getName(), crop.getDifficulty()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Crop> findAllCrops() {
+        return cropRepository.findAll();
+    }
 
     public CreateCropResponseDto saveCrop(CreateCropRequestDto requestDto) {
         Crop crop = createCrop(requestDto);

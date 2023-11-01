@@ -1,9 +1,11 @@
 package com.example.farmuscrop.domain.crop.repository;
 
 import com.example.farmuscrop.domain.crop.document.Crop;
+import com.example.farmuscrop.domain.crop.dto.res.GetCropNameAndDifficultyDto;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CropRepository extends MongoRepository<Crop, String> {
