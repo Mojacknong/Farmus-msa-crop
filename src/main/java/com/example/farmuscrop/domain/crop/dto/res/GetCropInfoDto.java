@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Getter
-public class GetCropNameAndDifficultyDto {
+public class GetCropInfoDto {
 
     private String id;
     private String name;
     private String difficulty;
+    private String imageUrl;
 }

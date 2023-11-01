@@ -3,7 +3,7 @@ package com.example.farmuscrop.domain.crop.service;
 import com.example.farmuscrop.domain.crop.document.Crop;
 import com.example.farmuscrop.domain.crop.dto.req.CreateCropRequestDto;
 import com.example.farmuscrop.domain.crop.dto.res.CreateCropResponseDto;
-import com.example.farmuscrop.domain.crop.dto.res.GetCropNameAndDifficultyDto;
+import com.example.farmuscrop.domain.crop.dto.res.GetCropInfoDto;
 import com.example.farmuscrop.domain.crop.repository.CropRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -36,11 +36,11 @@ public class CropService {
         return CreateCropResponseDto.of(crop.getId());
     }
 
-    public List<GetCropNameAndDifficultyDto> getCropNameAndDifficultyList() {
+    public List<GetCropInfoDto> getCropNameAndDifficultyList() {
         List<Crop> crops = findAllCrops();
 
         return crops.stream()
-                .map(crop -> GetCropNameAndDifficultyDto.of(crop.getId().toHexString(), crop.getName(), crop.getDifficulty()))
+                .map(crop -> GetCropInfoDto.of(crop.getId().toHexString(), crop.getName(), crop.getDifficulty(), crop.getImageUrl()))
                 .collect(Collectors.toList());
     }
 
