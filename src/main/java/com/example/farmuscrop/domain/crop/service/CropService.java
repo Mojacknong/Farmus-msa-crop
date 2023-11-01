@@ -27,11 +27,13 @@ public class CropService {
 //        return mongoTemplate.findAll(Crop.Step.class);
 //    }
 
+
+
     public List<GetCropNameAndDifficultyDto> getCropNameAndDifficultyList() {
         List<Crop> crops = findAllCrops();
 
         return crops.stream()
-                .map(crop -> GetCropNameAndDifficultyDto.of(crop.getName(), crop.getDifficulty()))
+                .map(crop -> GetCropNameAndDifficultyDto.of(crop.getId().toHexString(), crop.getName(), crop.getDifficulty()))
                 .collect(Collectors.toList());
     }
 

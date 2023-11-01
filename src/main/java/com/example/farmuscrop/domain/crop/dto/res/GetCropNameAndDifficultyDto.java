@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GetCropNameAndDifficultyDto {
 
+    private String id;
     private String name;
     private String difficulty;
 }
