@@ -6,10 +6,12 @@ import com.example.farmuscrop.domain.crop.dto.res.CreateCropResponseDto;
 import com.example.farmuscrop.domain.crop.dto.res.GetCropNameAndDifficultyDto;
 import com.example.farmuscrop.domain.crop.repository.CropRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +29,12 @@ public class CropService {
 //        return mongoTemplate.findAll(Crop.Step.class);
 //    }
 
+    public CreateCropResponseDto saveCrop(CreateCropRequestDto requestDto) {
+        Crop crop = createCrop(requestDto);
+        cropRepository.save(crop);
 
+        return CreateCropResponseDto.of(crop.getId());
+    }
 
     public List<GetCropNameAndDifficultyDto> getCropNameAndDifficultyList() {
         List<Crop> crops = findAllCrops();
@@ -37,15 +44,10 @@ public class CropService {
                 .collect(Collectors.toList());
     }
 
-    public List<Crop> findAllCrops() {
-        return cropRepository.findAll();
-    }
+    public List<Crop.Step> getSteps(ObjectId id) {
+        Optional<Crop> crop = cropRepository.findById(id);
 
-    public CreateCropResponseDto saveCrop(CreateCropRequestDto requestDto) {
-        Crop crop = createCrop(requestDto);
-        cropRepository.save(crop);
-
-        return CreateCropResponseDto.of(crop.getId());
+        return crop.map(Crop::getSteps).orElse(null);
     }
 
     public Crop createCrop(CreateCropRequestDto requestDto) {
@@ -59,5 +61,9 @@ public class CropService {
 
     public Boolean checkCropPresent(String name) {
         return cropRepository.findByName(name).isPresent();
+    }
+
+    public List<Crop> findAllCrops() {
+        return cropRepository.findAll();
     }
 }
