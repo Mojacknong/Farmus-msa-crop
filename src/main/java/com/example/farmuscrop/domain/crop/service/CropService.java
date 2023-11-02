@@ -21,14 +21,6 @@ public class CropService {
     private final CropRepository cropRepository;
     private final MongoTemplate mongoTemplate;
 
-//    public Crop.Step findStepByNum(int num) {
-//        return mongoTemplate.findById(num, Crop.Step.class);
-//    }
-//
-//    public List<Crop.Step> findAllSteps() {
-//        return mongoTemplate.findAll(Crop.Step.class);
-//    }
-
     public CreateCropResponseDto saveCrop(CreateCropRequestDto requestDto) {
         Crop crop = createCrop(requestDto);
         cropRepository.save(crop);
@@ -36,7 +28,7 @@ public class CropService {
         return CreateCropResponseDto.of(crop.getId());
     }
 
-    public List<GetCropInfoDto> getCropNameAndDifficultyList() {
+    public List<GetCropInfoDto> getCropInfoList() {
         List<Crop> crops = findAllCrops();
 
         return crops.stream()
