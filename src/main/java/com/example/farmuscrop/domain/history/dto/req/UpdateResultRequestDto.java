@@ -12,6 +12,6 @@ import org.bson.types.ObjectId;
 @Getter
 public class UpdateResultRequestDto {
 
-    private ObjectId historyDetailId;
+    private String historyDetailId;
     private HistoryDetail.HistoryPost result;
 }

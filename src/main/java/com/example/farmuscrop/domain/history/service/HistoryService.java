@@ -4,19 +4,19 @@ import com.example.farmuscrop.domain.history.document.History;
 import com.example.farmuscrop.domain.history.document.HistoryDetail;
 import com.example.farmuscrop.domain.history.dto.req.CreateHistoryDetailRequestDto;
 import com.example.farmuscrop.domain.history.dto.req.UpdateResultRequestDto;
-import com.example.farmuscrop.domain.history.dto.res.CreateHistoryDetailResponseDto;
-import com.example.farmuscrop.domain.history.dto.res.CreateHistoryResponseDto;
-import com.example.farmuscrop.domain.history.dto.res.GetHistoryResponseDto;
-import com.example.farmuscrop.domain.history.dto.res.UpdateResultResponseDto;
+import com.example.farmuscrop.domain.history.dto.res.*;
 import com.example.farmuscrop.domain.history.repository.HistoryDetailRepository;
 import com.example.farmuscrop.domain.history.repository.HistoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class HistoryService {
 
@@ -34,17 +34,17 @@ public class HistoryService {
     public CreateHistoryDetailResponseDto createUserHistoryDetail(Long userId, CreateHistoryDetailRequestDto requestDto) {
         History history = getHistory(userId);
         HistoryDetail newHistoryDetail = createHistoryDetail(requestDto);
-        HistoryDetail savedDetail = historyDetailRepository.save(newHistoryDetail);
+        ObjectId savedId = historyDetailRepository.save(newHistoryDetail).getId();
 
         History.Detail newDetail = createDetail(
-                savedDetail.getDetailId(),
+                savedId.toHexString(),
                 requestDto.getImage(),
                 requestDto.getVeggieName(),
                 requestDto.getName(),
                 requestDto.getPeriod()
         );
 
-        if (requestDto.isVeggie()) {
+        if (requestDto.getIsVeggie()) {
             history.addVeggieHistoryDetail(newDetail);
         } else {
             history.addFarmClubHistoryDetail(newDetail);
@@ -56,13 +56,13 @@ public class HistoryService {
     }
 
     public UpdateResultResponseDto updateDetailResult(UpdateResultRequestDto requestDto) {
-        HistoryDetail detail = getHistoryDetail(requestDto.getHistoryDetailId());
+        HistoryDetail detail = getHistoryDetail(new ObjectId(requestDto.getHistoryDetailId()));
 
         detail.updateHistoryDetailResult(requestDto.getResult());
 
         HistoryDetail saved = historyDetailRepository.save(detail);
 
-        return UpdateResultResponseDto.of(saved.getDetailId().toHexString());
+        return UpdateResultResponseDto.of(saved.getId().toHexString());
     }
 
     public GetHistoryResponseDto getUserHistoryDetails(Long userId) {
@@ -73,6 +73,19 @@ public class HistoryService {
                 history.getVeggieHistoryDetails(),
                 history.getFarmClubHistoryDetails()
         );
+    }
+
+    public GetHistoryDetailResponseDto getUserHistoryDetail(ObjectId historyDetailId) {
+        HistoryDetail detail = getHistoryDetail(historyDetailId);
+
+        return GetHistoryDetailResponseDto.of(
+                detail.getDiaryPosts(),
+                detail.getFarmResult()
+        );
+    }
+
+    public HistoryDetail saveHistoryDetail(HistoryDetail historyDetail) {
+        return historyDetailRepository.save(historyDetail);
     }
 
     public void validateHistory(Long userId) {
@@ -102,7 +115,7 @@ public class HistoryService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기록입니다."));
     }
 
-    public History.Detail createDetail(ObjectId detailId, String image, String veggieName, String name, String period) {
+    public History.Detail createDetail(String detailId, String image, String veggieName, String name, String period) {
         return History.Detail.createDetail(detailId, image, veggieName, name, period);
     }
 }

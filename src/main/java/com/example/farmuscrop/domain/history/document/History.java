@@ -38,13 +38,13 @@ public class History extends BaseDocument {
     @Builder
     public static class Detail {
 
-        private ObjectId detailId;
+        private String detailId;
         private String image;
         private String veggieName;
         private String name;
         private String period;
 
-        public static Detail createDetail(ObjectId detailId, String image, String veggieName, String name, String period) {
+        public static Detail createDetail(String detailId, String image, String veggieName, String name, String period) {
             return Detail.builder()
                     .detailId(detailId)
                     .image(image)

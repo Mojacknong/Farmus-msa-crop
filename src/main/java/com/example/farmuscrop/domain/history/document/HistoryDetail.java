@@ -23,7 +23,7 @@ import java.util.List;
 public class HistoryDetail extends BaseDocument {
 
     @Id
-    private ObjectId detailId;
+    private ObjectId id;
 
     private List<HistoryPost> diaryPosts;
     private HistoryPost farmResult;
@@ -36,7 +36,7 @@ public class HistoryDetail extends BaseDocument {
 
         private String postImage;
         private String content;
-        private LocalDateTime dateTime;
+        private String dateTime;
     }
 
     public static HistoryDetail createHistoryDetail(List<HistoryPost> diaryPosts, HistoryPost farmResult) {

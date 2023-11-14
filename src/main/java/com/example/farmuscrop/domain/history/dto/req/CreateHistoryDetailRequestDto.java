@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 public class CreateHistoryDetailRequestDto {
 
-    private boolean isVeggie;
+    private Boolean isVeggie;
 
     private String image;
     private String veggieName;
