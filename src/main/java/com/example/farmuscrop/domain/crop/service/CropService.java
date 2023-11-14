@@ -23,16 +23,17 @@ public class CropService {
 
     public CreateCropResponseDto saveCrop(CreateCropRequestDto requestDto) {
         Crop crop = createCrop(requestDto);
-        cropRepository.save(crop);
+        Crop newCrop = cropRepository.save(crop);
 
-        return CreateCropResponseDto.of(crop.getId());
+        return CreateCropResponseDto.of(newCrop.getId());
     }
 
     public List<GetCropInfoDto> getCropInfoList() {
         List<Crop> crops = findAllCrops();
 
+        // get 0 ~ 3 random int
         return crops.stream()
-                .map(crop -> GetCropInfoDto.of(crop.getId().toHexString(), crop.getName(), crop.getDifficulty(), crop.getImageUrl()))
+                .map(crop -> GetCropInfoDto.of(crop.getId().toHexString(), crop.getName(), crop.getDifficulty(), crop.getImageUrl().get(Math.toIntExact(Math.round(Math.random() * 3)))))
                 .collect(Collectors.toList());
     }
 
