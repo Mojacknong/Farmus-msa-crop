@@ -30,7 +30,7 @@ public class Crop extends BaseDocument {
 
     private List<Step> steps;
 
-    private String imageUrl;
+    private List<String> imageUrl;
 
     @AllArgsConstructor
     @NoArgsConstructor
@@ -44,7 +44,7 @@ public class Crop extends BaseDocument {
         private List<String> tips;
     }
 
-    public static Crop createCrop(String name, String difficulty, List<Step> steps, String imageUrl) {
+    public static Crop createCrop(String name, String difficulty, List<Step> steps, List<String> imageUrl) {
         return Crop.builder()
                 .name(name)
                 .difficulty(difficulty)

@@ -14,6 +14,6 @@ public class CreateCropRequestDto {
 
     private String name;
     private String difficulty;
-    private String imageUrl;
+    private List<String> imageUrl;
     private List<Crop.Step> steps;
 }
