@@ -15,20 +15,20 @@ import static com.example.farmuscrop.global.response.SuccessMessage.SUCCESS;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@JsonPropertyOrder({"code", "message", "result"})
+@JsonPropertyOrder({"code", "message", "data"})
 public class BaseResponseDto<T> {
     private final int code;
     private final String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private T result;
+    private T data;
 
-    public static <T> BaseResponseDto of(SuccessMessage successMessage, T result){
+    public static <T> BaseResponseDto of(SuccessMessage successMessage, T data){
 
         return BaseResponseDto.builder()
                 .code(successMessage.getCode())
                 .message(successMessage.getMessage())
-                .result(result)
+                .data(data)
                 .build();
     }
 
