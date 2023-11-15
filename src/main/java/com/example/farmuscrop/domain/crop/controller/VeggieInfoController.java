@@ -1,8 +1,8 @@
 package com.example.farmuscrop.domain.crop.controller;
 
-import com.example.farmuscrop.domain.crop.document.Crop;
-import com.example.farmuscrop.domain.crop.dto.req.CreateCropRequestDto;
-import com.example.farmuscrop.domain.crop.service.CropService;
+import com.example.farmuscrop.domain.crop.document.VeggieInfo;
+import com.example.farmuscrop.domain.crop.dto.req.CreateVeggieInfoRequestDto;
+import com.example.farmuscrop.domain.crop.service.VeggieInfoService;
 import com.example.farmuscrop.global.response.BaseResponseDto;
 import com.example.farmuscrop.global.response.ErrorMessage;
 import com.example.farmuscrop.global.response.SuccessMessage;
@@ -16,31 +16,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/crop")
 @RequiredArgsConstructor
-public class CropController {
+public class VeggieInfoController {
 
-    private final CropService cropService;
+    private final VeggieInfoService veggieInfoService;
 
     @PostMapping("")
-    public BaseResponseDto<?> createCrop(
-            @RequestBody CreateCropRequestDto requestDto
+    public BaseResponseDto<?> createVeggieInfo(
+            @RequestBody CreateVeggieInfoRequestDto requestDto
     ) {
-        if (cropService.checkCropPresent(requestDto.getName())) {
+        if (veggieInfoService.checkVeggieInfoPresent(requestDto.getName())) {
             return BaseResponseDto.of(ErrorMessage.INTERVAL_SERVER_ERROR);
         } else {
-            return BaseResponseDto.of(SuccessMessage.SUCCESS, cropService.saveCrop(requestDto));
+            return BaseResponseDto.of(SuccessMessage.SUCCESS, veggieInfoService.saveVeggieInfo(requestDto));
         }
     }
 
     @GetMapping("")
-    public BaseResponseDto<?> getCropInfo() {
-        return BaseResponseDto.of(SuccessMessage.SUCCESS, cropService.getCropInfoList());
+    public BaseResponseDto<?> getVeggieInfo() {
+        return BaseResponseDto.of(SuccessMessage.SUCCESS, veggieInfoService.getCropInfoList());
     }
 
     @GetMapping("/{id}")
-    public BaseResponseDto<?> getCropSteps(
+    public BaseResponseDto<?> getVeggieInfoSteps(
             @PathVariable String id
     ) {
-        List<Crop.Step> steps = cropService.getSteps(new ObjectId(id));
+        List<VeggieInfo.Step> steps = veggieInfoService.getSteps(new ObjectId(id));
         if (steps == null) {
             return BaseResponseDto.of(ErrorMessage.INTERVAL_SERVER_ERROR);
         } else {
