@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Getter
-public class GetCropInfoDto {
+public class GetVeggieInfoDto {
 
     private String id;
     private String name;
     private String difficulty;
     private String imageUrl;
+    private String grayImageUrl;
 }

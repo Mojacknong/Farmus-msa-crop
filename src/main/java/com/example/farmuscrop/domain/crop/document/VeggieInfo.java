@@ -18,8 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Document(collection = "crops")
-public class Crop extends BaseDocument {
+@Document(collection = "veggie_info")
+public class VeggieInfo extends BaseDocument {
 
     @Id
     private ObjectId id;
@@ -30,7 +30,13 @@ public class Crop extends BaseDocument {
 
     private List<Step> steps;
 
-    private List<String> imageUrl;
+    private String veggieImage;
+
+    private String veggieGrayImage;
+
+    private List<String> farmClubImageUrls;
+
+    private String farmClubGrayImage;
 
     @AllArgsConstructor
     @NoArgsConstructor
@@ -44,12 +50,15 @@ public class Crop extends BaseDocument {
         private List<String> tips;
     }
 
-    public static Crop createCrop(String name, String difficulty, List<Step> steps, List<String> imageUrl) {
-        return Crop.builder()
+    public static VeggieInfo createVeggieInfo(String name, String difficulty, List<Step> steps, String veggieImage, String veggieGrayImage, List<String> farmClubImageUrls, String farmClubGrayImage) {
+        return VeggieInfo.builder()
                 .name(name)
                 .difficulty(difficulty)
                 .steps(steps)
-                .imageUrl(imageUrl)
+                .veggieImage(veggieImage)
+                .veggieGrayImage(veggieGrayImage)
+                .farmClubImageUrls(farmClubImageUrls)
+                .farmClubGrayImage(farmClubGrayImage)
                 .build();
     }
 }

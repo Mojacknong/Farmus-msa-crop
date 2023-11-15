@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 
 @AllArgsConstructor(staticName = "of")
 @Getter
-public class CreateCropResponseDto {
+public class CreateVeggieInfoResponseDto {
 
     private ObjectId id;
 }
