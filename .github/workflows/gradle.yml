@@ -9,7 +9,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
     branches: [ "dev" ]
 
@@ -54,21 +54,10 @@ jobs:
             docker build -f Dockerfile -t minchogt/fu-crop .
             docker push minchogt/fu-crop
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cicdsample
-          path: build/libs/*.jar
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cicdsample
-          
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
