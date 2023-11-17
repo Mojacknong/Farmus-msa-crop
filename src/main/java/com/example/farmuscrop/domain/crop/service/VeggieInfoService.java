@@ -3,9 +3,12 @@ package com.example.farmuscrop.domain.crop.service;
 import com.example.farmuscrop.domain.crop.document.VeggieInfo;
 import com.example.farmuscrop.domain.crop.dto.req.CreateVeggieInfoRequestDto;
 import com.example.farmuscrop.domain.crop.dto.res.CreateVeggieInfoResponseDto;
+import com.example.farmuscrop.domain.crop.dto.res.GetStepNameResponseDto;
 import com.example.farmuscrop.domain.crop.dto.res.GetVeggieInfoDto;
+import com.example.farmuscrop.domain.crop.dto.res.GetVeggieInfoResponseDto;
 import com.example.farmuscrop.domain.crop.repository.VeggieInfoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VeggieInfoService {
 
     private final VeggieInfoRepository veggieInfoRepository;
@@ -43,6 +47,23 @@ public class VeggieInfoService {
                 .collect(Collectors.toList());
     }
 
+    public GetVeggieInfoResponseDto getVeggieInfoDetail(ObjectId id) {
+        VeggieInfo veggieInfo = veggieInfoRepository.findById(id).orElse(null);
+
+        // 0~3 랜덤 정수
+        int random = (int)(Math.random() * 4);
+
+        return GetVeggieInfoResponseDto.of(
+                veggieInfo.getName(),
+                veggieInfo.getDifficulty(),
+                veggieInfo.getFarmClubImageUrls().get(random),
+                veggieInfo.getFarmClubGrayImage(),
+                veggieInfo.getSteps().size(),
+                veggieInfo.getSteps().get(0).getContent()
+        );
+    }
+
+
     public List<VeggieInfo.Step> getSteps(ObjectId id) {
         Optional<VeggieInfo> crop = veggieInfoRepository.findById(id);
 
@@ -59,6 +80,14 @@ public class VeggieInfoService {
                 requestDto.getFarmClubImageUrls(),
                 requestDto.getFarmClubGrayImage()
         );
+    }
+
+    public GetStepNameResponseDto getVeggieInfoStepName(ObjectId id, int step) {
+        VeggieInfo crop = veggieInfoRepository.findById(id).orElse(null);
+
+        log.info("crop: {}", crop);
+
+        return GetStepNameResponseDto.of(crop.getSteps().get(step).getContent());
     }
 
     public Boolean checkVeggieInfoPresent(String name) {
