@@ -23,9 +23,10 @@ public class HistoryController {
 
     @PostMapping("")
     public BaseResponseDto<?> createUserHistory(
-            @RequestBody CreateHistoryRequestDto requestDto
+            HttpServletRequest request
     ) {
-        return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createUserHistory(requestDto.getUserId()));
+        Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
+        return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createUserHistory(userId));
     }
 
     @GetMapping("")
