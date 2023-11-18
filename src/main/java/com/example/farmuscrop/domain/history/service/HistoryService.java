@@ -1,19 +1,19 @@
 package com.example.farmuscrop.domain.history.service;
 
 import com.example.farmuscrop.domain.history.document.History;
+import com.example.farmuscrop.domain.history.document.HistoryClubDetail;
 import com.example.farmuscrop.domain.history.document.HistoryDetail;
+import com.example.farmuscrop.domain.history.dto.req.CreateHistoryClubDetailRequestDto;
 import com.example.farmuscrop.domain.history.dto.req.CreateHistoryDetailRequestDto;
 import com.example.farmuscrop.domain.history.dto.req.UpdateResultRequestDto;
 import com.example.farmuscrop.domain.history.dto.res.*;
+import com.example.farmuscrop.domain.history.repository.HistoryClubDetailRepository;
 import com.example.farmuscrop.domain.history.repository.HistoryDetailRepository;
 import com.example.farmuscrop.domain.history.repository.HistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 @Service
 @Slf4j
@@ -22,6 +22,7 @@ public class HistoryService {
 
     private final HistoryRepository historyRepository;
     private final HistoryDetailRepository historyDetailRepository;
+    private final HistoryClubDetailRepository historyClubDetailRepository;
 
     public CreateHistoryResponseDto createUserHistory(Long userId) {
         validateHistory(userId);
@@ -31,7 +32,7 @@ public class HistoryService {
         return CreateHistoryResponseDto.of(saved.getId().toHexString());
     }
 
-    public CreateHistoryDetailResponseDto createUserHistoryDetail(Long userId, CreateHistoryDetailRequestDto requestDto) {
+    public CreateHistoryDetailResponseDto createHistoryDetail(Long userId, CreateHistoryDetailRequestDto requestDto) {
         History history = getHistory(userId);
         HistoryDetail newHistoryDetail = createHistoryDetail(requestDto);
         ObjectId savedId = historyDetailRepository.save(newHistoryDetail).getId();
@@ -44,15 +45,31 @@ public class HistoryService {
                 requestDto.getPeriod()
         );
 
-        if (requestDto.getIsVeggie()) {
-            history.addVeggieHistoryDetail(newDetail);
-        } else {
-            history.addFarmClubHistoryDetail(newDetail);
-        }
+        history.addVeggieHistoryDetail(newDetail);
 
         History saved = historyRepository.save(history);
 
         return CreateHistoryDetailResponseDto.of(saved.getId().toHexString());
+    }
+
+    public CreateHistoryClubDetailResponseDto createHistoryClubDetail(Long userId, CreateHistoryClubDetailRequestDto requestDto) {
+        History history = getHistory(userId);
+        HistoryClubDetail newHistoryClubDetail = createHistoryClubDetail(requestDto);
+        ObjectId savedId = historyClubDetailRepository.save(newHistoryClubDetail).getId();
+
+        History.Detail newDetail = createDetail(
+                savedId.toHexString(),
+                requestDto.getImage(),
+                requestDto.getVeggieName(),
+                requestDto.getName(),
+                requestDto.getPeriod()
+        );
+
+        history.addFarmClubHistoryDetail(newDetail);
+
+        History saved = historyRepository.save(history);
+
+        return CreateHistoryClubDetailResponseDto.of(saved.getId().toHexString());
     }
 
     public UpdateResultResponseDto updateDetailResult(UpdateResultRequestDto requestDto) {
@@ -107,6 +124,12 @@ public class HistoryService {
         return HistoryDetail.createHistoryDetail(
                 requestDto.getDiaryPosts(),
                 requestDto.getFarmResult()
+        );
+    }
+
+    public HistoryClubDetail createHistoryClubDetail(CreateHistoryClubDetailRequestDto requestDto) {
+        return HistoryClubDetail.createHistoryClubDetail(
+                requestDto.getMissionPosts()
         );
     }
 
