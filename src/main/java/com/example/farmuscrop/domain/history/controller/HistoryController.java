@@ -1,8 +1,8 @@
 package com.example.farmuscrop.domain.history.controller;
 
 import com.example.farmuscrop.common.JwtTokenProvider;
+import com.example.farmuscrop.domain.history.dto.req.CreateHistoryClubDetailRequestDto;
 import com.example.farmuscrop.domain.history.dto.req.CreateHistoryDetailRequestDto;
-import com.example.farmuscrop.domain.history.dto.req.CreateHistoryRequestDto;
 import com.example.farmuscrop.domain.history.dto.req.UpdateResultRequestDto;
 import com.example.farmuscrop.domain.history.service.HistoryService;
 import com.example.farmuscrop.global.response.BaseResponseDto;
@@ -37,13 +37,23 @@ public class HistoryController {
     }
 
     @PostMapping("/detail")
-    public BaseResponseDto<?> createUserHistoryDetail(
+    public BaseResponseDto<?> createHistoryDetail(
             HttpServletRequest request,
             @RequestBody CreateHistoryDetailRequestDto requestDto
     ) {
         Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
 
-        return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createUserHistoryDetail(userId, requestDto));
+        return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createHistoryDetail(userId, requestDto));
+    }
+
+    @PostMapping("/detail/club")
+    public BaseResponseDto<?> createHistoryClubDetail(
+            HttpServletRequest request,
+            @RequestBody CreateHistoryClubDetailRequestDto requestDto
+    ) {
+        Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
+
+        return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createHistoryClubDetail(userId, requestDto));
     }
 
     @GetMapping("/detail/{historyDetailId}")
