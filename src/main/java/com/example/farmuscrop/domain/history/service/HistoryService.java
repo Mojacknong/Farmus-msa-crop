@@ -101,6 +101,14 @@ public class HistoryService {
         );
     }
 
+    public GetHistoryClubDetailResponseDto getUserHistoryClubDetail(ObjectId historyClubDetailId) {
+        HistoryClubDetail detail = getHistoryClubDetail(historyClubDetailId);
+
+        return GetHistoryClubDetailResponseDto.of(
+                detail.getMissionPostList()
+        );
+    }
+
     public HistoryDetail saveHistoryDetail(HistoryDetail historyDetail) {
         return historyDetailRepository.save(historyDetail);
     }
@@ -135,6 +143,11 @@ public class HistoryService {
 
     public HistoryDetail getHistoryDetail(ObjectId historyDetailId) {
         return historyDetailRepository.findById(historyDetailId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기록입니다."));
+    }
+
+    public HistoryClubDetail getHistoryClubDetail(ObjectId historyClubDetailId) {
+        return historyClubDetailRepository.findById(historyClubDetailId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기록입니다."));
     }
 

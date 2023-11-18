@@ -8,11 +8,13 @@ import com.example.farmuscrop.domain.history.service.HistoryService;
 import com.example.farmuscrop.global.response.BaseResponseDto;
 import com.example.farmuscrop.global.response.SuccessMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/crop/history")
 @RequiredArgsConstructor
@@ -23,9 +25,8 @@ public class HistoryController {
 
     @PostMapping("")
     public BaseResponseDto<?> createUserHistory(
-            HttpServletRequest request
+            @RequestHeader("user") Long userId
     ) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
         return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createUserHistory(userId));
     }
 
@@ -38,21 +39,17 @@ public class HistoryController {
 
     @PostMapping("/detail")
     public BaseResponseDto<?> createHistoryDetail(
-            HttpServletRequest request,
+            @RequestHeader("user") Long userId,
             @RequestBody CreateHistoryDetailRequestDto requestDto
     ) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
-
         return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createHistoryDetail(userId, requestDto));
     }
 
     @PostMapping("/detail/club")
     public BaseResponseDto<?> createHistoryClubDetail(
-            HttpServletRequest request,
+            @RequestHeader("user") Long userId,
             @RequestBody CreateHistoryClubDetailRequestDto requestDto
     ) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserId(request));
-
         return BaseResponseDto.of(SuccessMessage.CREATED, historyService.createHistoryClubDetail(userId, requestDto));
     }
 
@@ -61,6 +58,13 @@ public class HistoryController {
             @PathVariable String historyDetailId
     ) {
         return BaseResponseDto.of(SuccessMessage.SUCCESS, historyService.getUserHistoryDetail(new ObjectId(historyDetailId)));
+    }
+
+    @GetMapping("/detail/club/{historyClubDetailId}")
+    public BaseResponseDto<?> getHistoryClubDetail(
+            @PathVariable String historyClubDetailId
+    ) {
+        return BaseResponseDto.of(SuccessMessage.SUCCESS, historyService.getUserHistoryClubDetail(new ObjectId(historyClubDetailId)));
     }
 
     @PatchMapping("/detail")
