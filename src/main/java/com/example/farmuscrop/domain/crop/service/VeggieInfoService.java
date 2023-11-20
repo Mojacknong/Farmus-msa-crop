@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -97,6 +98,38 @@ public class VeggieInfoService {
                         step.getTips().get((int) (Math.random() * step.getTips().size()))
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public List<List<GetStepsWithTipResponseDto>> getStepsWithTip(ObjectId id, int stepNum) {
+        VeggieInfo crop = veggieInfoRepository.findById(id).orElse(null);
+
+        List<GetStepsWithTipResponseDto> postList = new ArrayList<>();
+        List<GetStepsWithTipResponseDto> curList = new ArrayList<>();
+        List<GetStepsWithTipResponseDto> preList = new ArrayList<>();
+
+        List<GetStepsWithTipResponseDto> list = crop.getSteps().stream()
+                .map(step -> GetStepsWithTipResponseDto.of(
+                        step.getContent(),
+                        step.getTips().get((int) (Math.random() * step.getTips().size()))
+                ))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < list.size(); i++) {
+            if (i < stepNum) {
+                preList.add(list.get(i));
+            } else if (i == stepNum) {
+                curList.add(list.get(i));
+            } else {
+                postList.add(list.get(i));
+            }
+        }
+
+        List<List<GetStepsWithTipResponseDto>> result = new ArrayList<>();
+        result.add(preList);
+        result.add(curList);
+        result.add(postList);
+
+        return result;
     }
 
     public GetAllStepNameResponseDto getAllStepName(ObjectId id) {
