@@ -2,10 +2,7 @@ package com.example.farmuscrop.domain.crop.service;
 
 import com.example.farmuscrop.domain.crop.document.VeggieInfo;
 import com.example.farmuscrop.domain.crop.dto.req.CreateVeggieInfoRequestDto;
-import com.example.farmuscrop.domain.crop.dto.res.CreateVeggieInfoResponseDto;
-import com.example.farmuscrop.domain.crop.dto.res.GetStepNameResponseDto;
-import com.example.farmuscrop.domain.crop.dto.res.GetVeggieInfoDto;
-import com.example.farmuscrop.domain.crop.dto.res.GetVeggieInfoResponseDto;
+import com.example.farmuscrop.domain.crop.dto.res.*;
 import com.example.farmuscrop.domain.crop.repository.VeggieInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +86,27 @@ public class VeggieInfoService {
         log.info("crop: {}", crop);
 
         return GetStepNameResponseDto.of(crop.getSteps().get(step).getContent());
+    }
+
+    public List<GetStepsWithTipResponseDto> getStepsWithTip(ObjectId id) {
+        VeggieInfo crop = veggieInfoRepository.findById(id).orElse(null);
+
+        return crop.getSteps().stream()
+                .map(step -> GetStepsWithTipResponseDto.of(
+                        step.getContent(),
+                        step.getTips().get((int) (Math.random() * step.getTips().size()))
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public GetAllStepNameResponseDto getAllStepName(ObjectId id) {
+        VeggieInfo crop = veggieInfoRepository.findById(id).orElse(null);
+
+        return GetAllStepNameResponseDto.of(
+                crop.getSteps().stream()
+                        .map(VeggieInfo.Step::getContent)
+                        .collect(Collectors.toList())
+        );
     }
 
     public Boolean checkVeggieInfoPresent(String name) {
