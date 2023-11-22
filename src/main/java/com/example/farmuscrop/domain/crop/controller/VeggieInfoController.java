@@ -52,6 +52,28 @@ public class VeggieInfoController {
         }
     }
 
+    @GetMapping("/{id}/info")
+    public BaseResponseDto<?> getStepsWithTip(
+            @PathVariable String id
+    ) {
+        return BaseResponseDto.of(SuccessMessage.SUCCESS, veggieInfoService.getStepsWithTip(new ObjectId(id)));
+    }
+
+    @GetMapping("/{id}/info/{step}")
+    public BaseResponseDto<?> getStepsWithTip(
+            @PathVariable String id,
+            @PathVariable int step
+    ) {
+        return BaseResponseDto.of(SuccessMessage.SUCCESS, veggieInfoService.getStepsWithTip(new ObjectId(id), step));
+    }
+
+    @GetMapping("/{id}/steps")
+    public BaseResponseDto<?> getVeggieInfoStepList(
+            @PathVariable String id
+    ) {
+        return BaseResponseDto.of(SuccessMessage.SUCCESS, veggieInfoService.getAllStepName(new ObjectId(id)));
+    }
+
     @GetMapping("/info/{id}")
     public GetVeggieInfoResponseDto getVeggieInfoDetail(
             @PathVariable String id
